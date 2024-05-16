@@ -3,16 +3,13 @@ from time import sleep
 
 import dht
 
-# pin = Pin("LED", Pin.OUT)
-# while True:
-#   pin.toggle()
-#   sleep(1)
-
+ledPin = Pin("LED", Pin.OUT)
 sensor = dht.DHT22(Pin(22))
 
 while True:
   try:
     sensor.measure()
+    ledPin.toggle()
     sleep(2)
     temp = sensor.temperature()
     hum = sensor.humidity()
