@@ -1,16 +1,33 @@
 import umqtt.simple as mqtt
-
 from machine import Pin
-from time import sleep
-
+import network
+import time
 import dht
+from credentials import WIFI_SSID, WIFI_PASSWORD, MQTT_USERNAME, MQTT_PASSWORD
+
+# Anslut till WiFi-nätverk
+wlan = network.WLAN(network.STA_IF)
+wlan.active(True)
+wlan.connect(WIFI_SSID, WIFI_PASSWORD)
+
+max_attempts = 10
+attempt = 0
+
+while attempt < max_attempts and not wlan.isconnected():
+    print('Connecting to network...')
+    time.sleep(1)
+    attempt += 1
+
+if wlan.isconnected():
+    print('Network connected!')
+    print('IP address:', wlan.ifconfig()[0])
+else:
+    print('Failed to connect to network')
 
 # MQTT inställningar
 MQTT_BROKER = '185.189.49.210'
 MQTT_PORT = 1883
 MQTT_TOPIC = 'test/iot'
-MQTT_USERNAME = 'iot_project'
-MQTT_PASSWORD = '800grader'
 
 # Initiera MQTT klient
 client = mqtt.MQTTClient('client_id', MQTT_BROKER, port=MQTT_PORT, user=MQTT_USERNAME, password=MQTT_PASSWORD)
@@ -25,7 +42,7 @@ while True:
   try:
     sensor.measure()
     ledPin.toggle()
-    sleep(2)
+    time.sleep(2)
     temp = sensor.temperature()
     hum = sensor.humidity()
 
