@@ -1,5 +1,6 @@
 import umqtt.simple as mqtt
 from machine import Pin
+import json
 import network
 import time
 import dht
@@ -51,7 +52,7 @@ while True:
             'humidity': hum
         }
     # Skicka data till MQTT broker
-    client.publish(MQTT_TOPIC, str(data))
+    client.publish(MQTT_TOPIC, json.dumps(data))
 
     print('Published:', data)
     # print('Temperature: C', temp)
