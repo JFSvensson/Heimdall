@@ -1,0 +1,57 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>MQTT Sensor Data</title>
+    <style>
+        body {
+            font-family: Arial, sans-serif;
+            text-align: center;
+            padding: 20px;
+        }
+        .data-container {
+            margin-top: 50px;
+        }
+        .data {
+            font-size: 2em;
+            margin: 20px 0;
+        }
+    </style>
+</head>
+<body>
+    <h1>Sensor Data from Pico W</h1>
+    <div class="data-container">
+        <div class="data">
+            Temperature: <span id="temperature">--</span> °C
+        </div>
+        <div class="data">
+            Humidity: <span id="humidity">--</span> %
+        </div>
+    </div>
+
+    <script>
+        const ws = new WebSocket('ws://localhost:3000');
+
+        ws.onopen = () => {
+            document.getElementById('status').innerText = 'Connected';
+        };
+
+        ws.onmessage = (event) => {
+            console.log('Message from server:', event.data);
+            const data = JSON.parse(event.data);
+            document.getElementById('temperature').innerText = data.temperature.toFixed(2);
+            document.getElementById('humidity').innerText = data.humidity.toFixed(2);
+        };
+
+        ws.onerror = (error) => {
+            console.log('WebSocket Error:', error);
+            document.getElementById('status').innerText = 'Error';
+        };
+
+        ws.onclose = () => {
+            document.getElementById('status').innerText = 'Disconnected';
+        };
+    </script>
+</body>
+</html>
