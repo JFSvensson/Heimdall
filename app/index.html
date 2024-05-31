@@ -43,29 +43,41 @@
     </div>
 
     <script>
-        const ws = new WebSocket('wss://svenssonom.se/mqtt-websocket-proxy/');
+        let ws;
+        const reconnectInterval = 5000; // Time in milliseconds to wait before attempting to reconnect
 
-        ws.onopen = () => {
-            document.getElementById('status').innerText = 'Connected';
-        };
+        function connect() {
+            ws = new WebSocket('wss://svenssonom.se/mqtt-websocket-proxy/');
 
-        ws.onmessage = (event) => {
-            console.log('Message from server:', event.data);
-            const data = JSON.parse(event.data);
-            document.getElementById('temperature').innerText = data.temperature.toFixed(2);
-            document.getElementById('humidity').innerText = data.humidity.toFixed(2);
-        };
+            ws.onopen = () => {
+                document.getElementById('status').innerText = 'Connected';
+                document.getElementById('status').style.color = 'green';
+                console.log('Connected to WebSocket');
+            };
 
-        ws.onerror = (error) => {
-            console.log('WebSocket Error:', error);
-            document.getElementById('status').innerText = 'Error';
-            document.getElementById('status').style.color = 'red';
-        };
+            ws.onmessage = (event) => {
+                console.log('Message from server:', event.data);
+                const data = JSON.parse(event.data);
+                document.getElementById('temperature').innerText = data.temperature.toFixed(2);
+                document.getElementById('humidity').innerText = data.humidity.toFixed(2);
+            };
 
-        ws.onclose = () => {
-            document.getElementById('status').innerText = 'Disconnected';
-            document.getElementById('status').style.color = 'orange';
-        };
+            ws.onerror = (error) => {
+                console.log('WebSocket Error:', error);
+                document.getElementById('status').innerText = 'Error';
+                document.getElementById('status').style.color = 'red';
+            };
+
+            ws.onclose = () => {
+                document.getElementById('status').innerText = 'Disconnected';
+                document.getElementById('status').style.color = 'orange';
+                console.log('WebSocket disconnected. Attempting to reconnect in ' + reconnectInterval / 1000 + ' seconds...');
+                setTimeout(connect, reconnectInterval);
+            };
+        }
+
+        // Initialize the first connection
+        connect();
     </script>
 </body>
 </html>
