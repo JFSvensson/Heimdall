@@ -3,12 +3,15 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>MQTT Sensor Data</title>
+    <title>Heimdall - Home Data Monitoring</title>
     <style>
         body {
             font-family: Arial, sans-serif;
             text-align: center;
             padding: 20px;
+        }
+        .header {
+            margin-bottom: 40px;
         }
         .data-container {
             margin-top: 50px;
@@ -25,7 +28,10 @@
     </style>
 </head>
 <body>
-    <h1>Sensor Data from Pico W</h1>
+    <div class="header">
+        <h1>Heimdall</h1>
+        <p>Your vigilant home data monitor</p>
+    </div>
     <div class="data-container">
         <div class="data">
             Temperature: <span id="temperature">--</span> °C
