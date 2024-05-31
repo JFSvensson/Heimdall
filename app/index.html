@@ -25,6 +25,9 @@
             margin: 20px 0;
             color: green;
         }
+        .control {
+            margin: 20px;
+        }
     </style>
 </head>
 <body>
@@ -40,6 +43,9 @@
             Humidity: <span id="humidity">--</span> %
         </div>
         <div id="status" class="status">Connecting...</div>
+    </div>
+    <div class="control">
+        <button id="toggleLed">Toggle LED</button>
     </div>
 
     <script>
@@ -78,6 +84,16 @@
 
         // Initialize the first connection
         connect();
+
+                // Toggle LED
+                document.getElementById('toggleLed').addEventListener('click', () => {
+            if (ws.readyState === WebSocket.OPEN) {
+                ws.send(JSON.stringify({ action: 'toggle_led' }));
+            } else {
+                console.log('WebSocket is not connected.');
+            }
+        });
+
     </script>
 </body>
 </html>
