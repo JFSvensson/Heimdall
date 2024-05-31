@@ -43,6 +43,9 @@
             Humidity: <span id="humidity">--</span> %
         </div>
         <div id="status" class="status">Connecting...</div>
+        <div class="data">
+            LED Status: <span id="ledStatus">--</span>
+        </div>
     </div>
     <div class="control">
         <button id="toggleLed">Toggle LED</button>
@@ -64,8 +67,13 @@
             ws.onmessage = (event) => {
                 console.log('Message from server:', event.data);
                 const data = JSON.parse(event.data);
-                document.getElementById('temperature').innerText = data.temperature.toFixed(2);
-                document.getElementById('humidity').innerText = data.humidity.toFixed(2);
+                if (data.temperature !== undefined && data.humidity !== undefined) {
+                    document.getElementById('temperature').innerText = data.temperature.toFixed(2);
+                    document.getElementById('humidity').innerText = data.humidity.toFixed(2);
+                }
+                if (data.led_status !== undefined) {
+                    document.getElementById('ledStatus').innerText = data.led_status === 'on' ? 'On' : 'Off';
+                }
             };
 
             ws.onerror = (error) => {
