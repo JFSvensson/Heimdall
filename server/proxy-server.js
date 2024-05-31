@@ -19,6 +19,11 @@ mqttClient.on('connect', () => {
       console.error('Failed to subscribe to topic', err);
     }
   });
+  mqttClient.subscribe('test/iot/led_status', (err) => {
+    if (err) {
+      console.error('Failed to subscribe to LED status topic', err);
+    }
+  });
 });
 
 mqttClient.on('message', (topic, message) => {
