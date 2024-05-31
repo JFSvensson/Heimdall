@@ -30,6 +30,7 @@ else:
 MQTT_BROKER = '185.189.49.210'
 MQTT_PORT = 1883
 MQTT_TOPIC = 'test/iot'
+MQTT_LED_STATUS_TOPIC = 'test/iot/led_status'
 
 # Initiera MQTT klient
 client = mqtt.MQTTClient('client_id', MQTT_BROKER, port=MQTT_PORT, user=MQTT_USERNAME, password=MQTT_PASSWORD)
@@ -45,6 +46,9 @@ async def handle_message(topic, msg):
         data = json.loads(msg)
         if data.get('action') == 'toggle_led':
             ledPin.value(not ledPin.value())
+            # Skicka LED-status till MQTT broker
+            led_status = 'on' if ledPin.value() else 'off'
+            client.publish(MQTT_LED_STATUS_TOPIC, json.dumps({'led_status': led_status}))
     except Exception as e:
         print('Failed to handle message:', e)
 
