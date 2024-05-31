@@ -17,6 +17,11 @@
             font-size: 2em;
             margin: 20px 0;
         }
+        .status {
+            font-size: 1.5em;
+            margin: 20px 0;
+            color: green;
+        }
     </style>
 </head>
 <body>
@@ -28,10 +33,11 @@
         <div class="data">
             Humidity: <span id="humidity">--</span> %
         </div>
+        <div id="status" class="status">Connecting...</div>
     </div>
 
     <script>
-        const ws = new WebSocket('ws://localhost:3000');
+        const ws = new WebSocket('wss://svenssonom.se/mqtt-websocket-proxy/');
 
         ws.onopen = () => {
             document.getElementById('status').innerText = 'Connected';
@@ -47,10 +53,12 @@
         ws.onerror = (error) => {
             console.log('WebSocket Error:', error);
             document.getElementById('status').innerText = 'Error';
+            document.getElementById('status').style.color = 'red';
         };
 
         ws.onclose = () => {
             document.getElementById('status').innerText = 'Disconnected';
+            document.getElementById('status').style.color = 'orange';
         };
     </script>
 </body>
