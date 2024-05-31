@@ -32,6 +32,13 @@ mqttClient.on('message', (topic, message) => {
 
 wss.on('connection', (ws) => {
   console.log('WebSocket client connected');
+  
+  ws.on('message', (message) => {
+    console.log('Received message from WebSocket client:', message);
+    // Forward the message to the MQTT broker
+    mqttClient.publish('test/iot', message);
+  });
+
   ws.on('close', () => {
     console.log('WebSocket client disconnected');
   });
